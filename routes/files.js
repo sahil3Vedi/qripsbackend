@@ -9,12 +9,13 @@ const fs = bluebird.promisifyAll(require('fs'));
 router.post('/', async(req,res) => {
     var form =  Formidable.IncomingForm();
     form.parse(req,function(err, fields, files){
+        console.log(files)
         const oldpath = files.file.path;
         const newpath = __dirname + "\\uploads\\" + files.file.name;
         fs.rename(oldpath, newpath, function(err){
             if (err) throw err;
             else{
-                res.json({filesrc:{src:`/uploads/${files.file.name}`}})
+                res.json({filesrc:`/uploads/${files.file.name}`})
             }
         });
     });
