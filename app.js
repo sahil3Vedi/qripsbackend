@@ -6,7 +6,11 @@ const cors = require('cors');
 require('dotenv/config');
 
 app.use(bodyParser.json());
-app.use(cors({origin: process.env.FRONTEND}));
+var corsOptions = {
+    origin: [process.env.ADMINFRONTEND,process.env.SUPPLIERFRONTEND,process.env.FRONTEND],
+    optionsSuccessStatus: 200 // For legacy browser support
+}
+app.use(cors(corsOptions));
 
 //Import Routes
 const filesRoute = require('./routes/files');
