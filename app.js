@@ -13,14 +13,19 @@ var corsOptions = {
 app.use(cors(corsOptions));
 
 //Import Routes
-const filesRoute = require('./routes/files');
-app.use('/files', filesRoute);
+
+// Image Uploads Handled by Cloudinary
+//const filesRoute = require('./routes/files');
+//app.use('/files', filesRoute);
 
 const usersRoute = require('./routes/users');
 app.use('/users', usersRoute);
 
 const superusersRoute = require('./routes/superusers');
 app.use('/superusers', superusersRoute);
+
+const suppliersRoute = require('./routes/suppliers');
+app.use('/suppliers',suppliersRoute)
 
 const warehousesRoute = require('./routes/warehouses');
 app.use('/warehouses', warehousesRoute);
