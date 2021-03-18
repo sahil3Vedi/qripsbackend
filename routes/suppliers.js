@@ -13,7 +13,7 @@ router.get('/', auth, async (req,res) => {
     .then(superuser=>{
         if(!superuser) res.status(401).json({ok: true, message: "Authorization Denied (Sneak)"})
     })
-    // fetching Warehouses from DB
+    // fetching Suppliers from DB
     try{
         const suppliers = await Supplier.find();
         res.json(suppliers);
@@ -63,21 +63,16 @@ router.post('/', auth, async(req,res) => {
                     supplier.supplier_password = hash;
                     await supplier.save()
                     .then(supplier=> {
-                        jwt.sign(
-                            {id: supplier.id},
-                            process.env.jwtSecret,
-                            { expiresIn: 3600 },
-                            (err,token) => {
-                                if(err) throw err;
-                                res.json({
-                                    token,
-                                    supplier:{
-                                        id: supplier.id,
-                                        supplier_name: superuser.supplier_name,
-                                    }
-                                })
+                        return res.status(200).json({
+                            ok: true,
+                            supplier:{
+                                id: supplier.id,
+                                supplier_name: supplier.supplier_name,
                             }
-                        )
+                        })
+                    })
+                    .catch(err=>{
+                        return res.status(400).json({message:err});
                     })
                 })
             })
