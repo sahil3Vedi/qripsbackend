@@ -80,4 +80,44 @@ router.post('/', auth, async(req,res) => {
     })
 });
 
+// Login a supplier
+router.post('/login',(req,res) => {
+    const {supplier_name,password} = req.body
+    // Simple Validation
+    if (!supplier_name || !password){
+        return res.status(400).json({message: 'Please Enter All Fields'})
+    }
+    // Check existing suppliers
+    Supplier.findOne({supplier_name})
+    .then(supplier => {
+        if (!supplier){
+            return res.status(400).json({message: 'Supplier does not exist'})
+        }
+        else{
+            // validate password
+            bcrypt.compare(password, supplier.supplier_password)
+            .then(isMatch=>{
+                if(!isMatch) return res.status(400).json({message: 'Invalid Credentials'})
+                jwt.sign(
+                    {id: supplier.id},
+                    process.env.jwtSecret,
+                    { expiresIn: 3600 },
+                    (err,token) => {
+                        if(err) throw err;
+                        res.json({
+                            token,
+                            supplier:{
+                                id: supplier.id,
+                                username: supplier.supplier_name,
+                            }
+                        })
+                    }
+                )
+            })
+        }
+
+    })
+});
+
+
 module.exports = router;
