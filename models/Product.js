@@ -1,28 +1,52 @@
 const mongoose = require('mongoose');
 
 const ProductsSchema = mongoose.Schema({
-    name: {
+    // FIELDS SUBMITTED BY THE SUPPLIER
+    supplier: {
         type: String,
         required: true
     },
-    description: {
+    supplier_name: {
         type: String,
         required: true
     },
-    price: {
+    supplier_company: {
+        type: String,
+        required: true
+    },
+    supplier_description: {
+        type: String,
+        required: true
+    },
+    supplier_images: [{
+        type: String,
+    }],
+    supplier_unit_price: {
         type: Number,
         required: true
     },
-    img: {
-        type: String,
-        required: true
-    },
-    quantity: {
+    qty: {
         type: Number,
         required: true
     },
-    warehouse_name: {
+    mfg_date: {
         type: String,
+        required: true
+    },
+    expiry_date: {
+        type: String,
+        required: true
+    },
+    product_id_type: {
+        type: String,
+        required: true
+    },
+    product_id:{
+        type: String,
+        required: true
+    },
+    approved: {
+        type: Boolean,
         required: true
     }
 })
