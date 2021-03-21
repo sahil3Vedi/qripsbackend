@@ -2,7 +2,23 @@ const express = require('express');
 const router  = express.Router();
 const Product = require('../models/Product');
 const Supplier = require('../models/Supplier');
+const Superuser = require('../models/Superuser')
 const auth = require('../middleware/auth');
+
+//GETS ALL PRODUCTS FROM ALL SUPPLIERS (FOR ADMIN)
+router.get('/all',auth, async (req,res) => {
+    // Authenticating Supplier
+    Superuser.findById(req.user.id)
+    .then(async(superuser)=>{
+        if(!superuser) res.status(401).json({ok: false, message: "Authorization Denied (Sneak)"})
+        try{
+            const products = await Product.find();
+            res.json(products);
+        } catch(err) {
+            res.json({message: err});
+        }
+    })
+});
 
 //GETS SUPPLIERS PRODUCTS FROM A COLLECTION
 router.get('/',auth, async (req,res) => {

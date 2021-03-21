@@ -2,6 +2,7 @@ const express = require('express');
 const router  = express.Router();
 const Supplier = require('../models/Supplier');
 const Superuser = require('../models/Superuser');
+const Product = require('../models/Product')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const auth = require('../middleware/auth');
@@ -118,6 +119,26 @@ router.post('/login',(req,res) => {
 
     })
 });
+
+router.delete('/:id',auth,(req,res)=>{
+    // authenticating Superuser
+    Superuser.findById(req.user.id)
+    .then(superuser=>{
+        if(!superuser) res.status(401).json({ok: false, message: "Authorization Denied (Sneak)"})
+    })
+    // verify supplier exists
+    Supplier.findById(req.params.id)
+    .then((supplier) => {
+        if (!supplier) res.status(400).json({ok: false, message: "Supplier Doesnt Exist"})
+        // check if any Product has the same Supplier
+        var query = {supplier: supplier.supplier_name}
+        Product.findOne(query)
+        .then((product)=>{
+            if (product) res.status(400).json({ok: false, message: "Supplier has Products."})
+            else supplier.remove().then(()=>res.json({success: true, message: "Supplier Deleted"}))
+        })
+    })
+})
 
 
 module.exports = router;
