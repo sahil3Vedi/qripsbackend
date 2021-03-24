@@ -48,7 +48,31 @@ const ProductsSchema = mongoose.Schema({
     approved: {
         type: Boolean,
         required: true
-    }
+    },
+    shop_name: {
+        type: String
+    },
+    shop_company: {
+        type: String
+    },
+    shop_description: {
+        type: String
+    },
+    tags: {
+        type: String
+    },
+    market_price: {
+        type: String
+    },
+    shop_price: {
+        type: String
+    },
+    shop_images: {
+        type: String
+    },
+    color: {
+        type: String
+    },
 })
 
 module.exports = mongoose.model('Product',ProductsSchema)

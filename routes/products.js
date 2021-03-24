@@ -7,12 +7,42 @@ const auth = require('../middleware/auth');
 
 //GETS ALL PRODUCTS FROM ALL SUPPLIERS (FOR ADMIN)
 router.get('/all',auth, async (req,res) => {
-    // Authenticating Supplier
+    // Authenticating Superuser
     Superuser.findById(req.user.id)
     .then(async(superuser)=>{
         if(!superuser) res.status(401).json({ok: false, message: "Authorization Denied (Sneak)"})
         try{
-            const products = await Product.find();
+            const products = await Product.find({approved: false});
+            res.json(products);
+        } catch(err) {
+            res.json({message: err});
+        }
+    })
+});
+
+//GETS ALL UNAPPROVED PRODUCTS FROM ALL SUPPLIERS (FOR ADMIN)
+router.get('/inventory',auth, async (req,res) => {
+    // Authenticating Superuser
+    Superuser.findById(req.user.id)
+    .then(async(superuser)=>{
+        if(!superuser) res.status(401).json({ok: false, message: "Authorization Denied (Sneak)"})
+        try{
+            const products = await Product.find({approved: false});
+            res.json(products);
+        } catch(err) {
+            res.json({message: err});
+        }
+    })
+});
+
+//GETS ALL APPROVED PRODUCTS FROM ALL SUPPLIERS (FOR ADMIN)
+router.get('/store',auth, async (req,res) => {
+    // Authenticating Superuser
+    Superuser.findById(req.user.id)
+    .then(async(superuser)=>{
+        if(!superuser) res.status(401).json({ok: false, message: "Authorization Denied (Sneak)"})
+        try{
+            const products = await Product.find({approved: true});
             res.json(products);
         } catch(err) {
             res.json({message: err});
@@ -69,5 +99,32 @@ router.post('/', auth, async (req, res) => {
                 })
         })
 });
+
+// Approves a Product by Admin
+router.post('/approve', auth, (req, res) => {
+    // Authenticating Supplier
+    Superuser.findById(req.user.id)
+    .then(async(superuser)=>{
+        if(!superuser) res.status(401).json({ok: false, message: "Authorization Denied (Sneak)"})
+        //Look for Product in question
+        let query = {supplier_name:req.body.supplier_name}
+        let approveFields = {$set: {
+            color: req.body.color,
+            market_price: req.body.market_price,
+            shop_company: req.body.shop_company,
+            shop_description: req.body.shop_description,
+            shop_images: req.body.shop_images,
+            shop_price: req.body.shop_price,
+            approved: true
+        }}
+        try{
+            await Product.updateOne(query,approveFields)
+            res.status(200).json({message: "Product Approved"})
+        } catch(err) {
+            res.json({message: err});
+        }
+        
+    })
+})
 
 module.exports = router;
