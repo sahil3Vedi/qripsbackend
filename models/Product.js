@@ -67,9 +67,9 @@ const ProductsSchema = mongoose.Schema({
     shop_price: {
         type: String
     },
-    shop_images: {
-        type: String
-    },
+    shop_images: [{
+        type: String,
+    }],
     color: {
         type: String
     },

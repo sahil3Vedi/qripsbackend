@@ -115,7 +115,8 @@ router.post('/approve', auth, (req, res) => {
             shop_description: req.body.shop_description,
             shop_images: req.body.shop_images,
             shop_price: req.body.shop_price,
-            approved: true
+            approved: true,
+            shop_name: req.body.shop_name
         }}
         try{
             await Product.updateOne(query,approveFields)
@@ -123,7 +124,7 @@ router.post('/approve', auth, (req, res) => {
         } catch(err) {
             res.json({message: err});
         }
-        
+
     })
 })
 
