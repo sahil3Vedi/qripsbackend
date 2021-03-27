@@ -128,4 +128,60 @@ router.post('/approve', auth, (req, res) => {
     })
 })
 
+//Pull product from shop
+router.post('/pullshop', auth, (req, res) => {
+    // Authenticating Supplier
+    Superuser.findById(req.user.id)
+    .then(async(superuser)=>{
+        if(!superuser) res.status(401).json({ok: false, message: "Authorization Denied (Sneak)"})
+        //Look for Product in question
+        let query = {supplier_name:req.body.supplier_name}
+        let approveFields = {$set: {
+            approved: false,
+        }}
+        try{
+            await Product.updateOne(query,approveFields)
+            res.status(200).json({message: "Product Pulled"})
+        } catch(err) {
+            res.json({message: err});
+        }
+
+    })
+})
+
+//Pull product from shop
+router.post('/pullshopsupplier', auth, (req, res) => {
+    // Authenticating Supplier
+    Supplier.findById(req.user.id)
+    .then(async(supplier)=>{
+        if(!supplier) res.status(401).json({ok: false, message: "Authorization Denied (Sneak)"})
+        //Look for Product in question
+        let query = {supplier_name:req.body.supplier_name}
+        let approveFields = {$set: {
+            approved: false,
+        }}
+        try{
+            await Product.updateOne(query,approveFields)
+            res.status(200).json({message: "Product Pulled"})
+        } catch(err) {
+            res.json({message: err});
+        }
+
+    })
+})
+
+router.delete('/deleteinventorysupplier/:id',auth,(req,res)=>{
+    // authenticating Superuser
+    Supplier.findById(req.user.id)
+    .then(supplier=>{
+        if(!supplier) res.status(401).json({ok: false, message: "Authorization Denied (Sneak)"})
+    })
+    // verify product exists
+    Product.findById(req.params.id)
+    .then((product) => {
+        if (!product) res.status(400).json({ok: false, message: "Product Doesnt Exist"})
+        else product.remove().then(()=>res.json({success: true, message: "Supplier Deleted"}))
+    })
+})
+
 module.exports = router;
