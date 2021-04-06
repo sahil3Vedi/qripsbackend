@@ -186,12 +186,12 @@ router.delete('/deleteinventorysupplier/:id',auth,(req,res)=>{
 })
 
 //fetch products of a particular category
-router.get('/fetch',async(req,res)=>{
+router.get('/fetch/:cat',async(req,res)=>{
     //fetch product containing that given tag
     try{
-        const products = await Product.find({ tags: { $all: [req.body.category] } });
+        const products = await Product.find({ tags: { $all: [req.params.cat] } });
         console.log(products);
-        console.log(req.body.category);
+        console.log(req.params.cat);
         res.json(products);
     } catch(err) {
         console.log(err)
