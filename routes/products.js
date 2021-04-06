@@ -12,7 +12,7 @@ router.get('/all',auth, async (req,res) => {
     .then(async(superuser)=>{
         if(!superuser) res.status(401).json({ok: false, message: "Authorization Denied (Sneak)"})
         try{
-            const products = await Product.find({approved: false});
+            const products = await Product.find();
             res.json(products);
         } catch(err) {
             res.json({message: err});
@@ -116,7 +116,8 @@ router.post('/approve', auth, (req, res) => {
             shop_images: req.body.shop_images,
             shop_price: req.body.shop_price,
             approved: true,
-            shop_name: req.body.shop_name
+            shop_name: req.body.shop_name,
+            tags: req.body.tags
         }}
         try{
             await Product.updateOne(query,approveFields)
@@ -182,6 +183,20 @@ router.delete('/deleteinventorysupplier/:id',auth,(req,res)=>{
         if (!product) res.status(400).json({ok: false, message: "Product Doesnt Exist"})
         else product.remove().then(()=>res.json({success: true, message: "Supplier Deleted"}))
     })
+})
+
+//fetch products of a particular category
+router.get('/fetch',async(req,res)=>{
+    //fetch product containing that given tag
+    try{
+        const products = await Product.find({ tags: { $all: [req.body.category] } });
+        console.log(products);
+        console.log(req.body.category);
+        res.json(products);
+    } catch(err) {
+        console.log(err)
+        res.json({message: err});
+    }
 })
 
 module.exports = router;

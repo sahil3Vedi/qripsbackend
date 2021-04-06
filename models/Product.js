@@ -58,9 +58,9 @@ const ProductsSchema = mongoose.Schema({
     shop_description: {
         type: String
     },
-    tags: {
-        type: String
-    },
+    tags: [{
+        type: String,
+    }],
     market_price: {
         type: String
     },
