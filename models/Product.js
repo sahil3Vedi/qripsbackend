@@ -25,6 +25,14 @@ const ProductsSchema = mongoose.Schema({
         type: Number,
         required: true
     },
+    supplier_unit_quantity_type: {
+        type: String,
+        required: true
+    },
+    supplier_unit_quantity: {
+        type: Number,
+        required: true
+    },
     qty: {
         type: Number,
         required: true
@@ -72,7 +80,7 @@ const ProductsSchema = mongoose.Schema({
     }],
     color: {
         type: String
-    },
+    }
 })
 
 module.exports = mongoose.model('Product',ProductsSchema)

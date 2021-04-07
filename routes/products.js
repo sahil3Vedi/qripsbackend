@@ -88,7 +88,9 @@ router.post('/', auth, async (req, res) => {
                         expiry_date: req.body.expiry_date,
                         product_id_type: req.body.product_id_type,
                         product_id: req.body.product_id,
-                        approved: false
+                        approved: false,
+                        supplier_unit_quantity_type: req.body.supplier_unit_quantity_type,
+                        supplier_unit_quantity: req.body.supplier_unit_quantity
                     });
                     try {
                         const savedProduct = await new_product.save();
