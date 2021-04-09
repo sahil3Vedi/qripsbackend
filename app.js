@@ -10,7 +10,7 @@ var corsOptions = {
     origin: [process.env.ADMINFRONTEND,process.env.SUPPLIERFRONTEND,process.env.FRONTEND],
     optionsSuccessStatus: 200 // For legacy browser support
 }
-app.use(cors(corsOptions));
+app.use(cors());
 
 //Import Routes
 
